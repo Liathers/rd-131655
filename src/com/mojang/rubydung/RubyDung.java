@@ -17,6 +17,7 @@ import com.mojang.rubydung.level.Level;
 import java.nio.FloatBuffer;
 
 public class RubyDung implements Runnable {
+	private static boolean isIsometric = true;
     private int width;
     private int height;
     private FloatBuffer fogColor;
@@ -38,11 +39,14 @@ public class RubyDung implements Runnable {
         this.fogColor.put(new float[] { (col >> 16 & 0xFF) / 255.0f, (col >> 8 & 0xFF) / 255.0f, (col & 0xFF) / 255.0f, 1.0f });
         this.fogColor.flip();
         Display.setDisplayMode(new DisplayMode(1024, 768));
+        //Display.setDisplayMode(new DisplayMode(854, 480));
         Display.create();
         Keyboard.create();
         Mouse.create();
+        
         this.width = Display.getDisplayMode().getWidth();
         this.height = Display.getDisplayMode().getHeight();
+        
         GL11.glEnable(3553);
         GL11.glShadeModel(7425);
         GL11.glClearColor(fr, fg, fb, 0.0f);
@@ -118,6 +122,7 @@ public class RubyDung implements Runnable {
     }
     
     private void setupCamera(final float a) {
+    	Mouse.setGrabbed(true);
         GL11.glMatrixMode(5889);
         GL11.glLoadIdentity();
         GLU.gluPerspective(70.0f, this.width / (float)this.height, 0.05f, 1000.0f);
@@ -126,12 +131,32 @@ public class RubyDung implements Runnable {
         this.moveCameraToPlayer(a);
     }
     
+    private void isometricCamera(final float a) {
+    	Mouse.setGrabbed(false);
+    	
+    	GL11.glViewport(0, 0, this.width, this.height);
+    	GL11.glClear(16640);
+        GL11.glEnable(2884);
+    	
+        GL11.glMatrixMode(5889);
+        GL11.glLoadIdentity();
+        GL11.glOrtho(0.0, (double)this.width, 0.0, (double)this.height, 10.0, 10000.0);
+        GL11.glMatrixMode(5888);
+        GL11.glLoadIdentity();
+        
+        GL11.glRotatef(25, 1.0f, 0.0f, 0.0f);
+        GL11.glRotatef(135, 0.0f, 1.0f, 0.0f);
+        GL11.glTranslatef(-(int)(this.height / 2 - this.height / 4.75), (this.height / 8), (this.width / 2));
+        GL11.glScalef(2, 2, 2);
+    }
+    
     public void render(final float a) {
         final float xo = (float)Mouse.getDX();
         final float yo = (float)Mouse.getDY();
         this.player.turn(xo, yo);
         GL11.glClear(16640);
-        this.setupCamera(a);
+        if (RubyDung.isIsometric) this.isometricCamera(a);
+        else this.setupCamera(a);
         GL11.glEnable(2884);
         GL11.glEnable(2912);
         GL11.glFogi(2917, 2048);
