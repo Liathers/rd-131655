@@ -17,7 +17,7 @@ import com.mojang.rubydung.level.Level;
 import java.nio.FloatBuffer;
 
 public class RubyDung implements Runnable {
-	private static boolean isIsometric = true;
+    private static boolean isIsometric = true;
     private int width;
     private int height;
     private FloatBuffer fogColor;
