@@ -39,7 +39,6 @@ public class RubyDung implements Runnable {
         this.fogColor.put(new float[] { (col >> 16 & 0xFF) / 255.0f, (col >> 8 & 0xFF) / 255.0f, (col & 0xFF) / 255.0f, 1.0f });
         this.fogColor.flip();
         Display.setDisplayMode(new DisplayMode(1024, 768));
-        //Display.setDisplayMode(new DisplayMode(854, 480));
         Display.create();
         Keyboard.create();
         Mouse.create();
